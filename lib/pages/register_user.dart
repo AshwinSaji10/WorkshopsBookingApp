@@ -23,12 +23,15 @@ class _RegisterUserState extends State<RegisterUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar( 
+        title: const Text("Register a new User"),
+        centerTitle: true,
+      ),
       body: Center(
         child: Container(
-          margin: const EdgeInsets.only(top: 50, left: 10, right: 10),
+          margin: const EdgeInsets.only(left: 10, right: 10),
           child: Column(
             children: [
-              const Text("Register a new User"),
               // TextFormField(),
               // TextFormField(),
               FormContainerWidget(

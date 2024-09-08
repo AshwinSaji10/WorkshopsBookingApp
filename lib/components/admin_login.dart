@@ -20,10 +20,11 @@ class _AdminLoginState extends State<AdminLogin> {
 
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      margin: const EdgeInsets.only(left: 10,right: 10),
+    return Container(
+      margin: const EdgeInsets.only(left: 10, right: 10),
       child: Column(
         children: [
           const Text("Admin Login"),
@@ -32,18 +33,31 @@ class _AdminLoginState extends State<AdminLogin> {
             controller: _usernameController,
             isPasswordField: false,
           ),
-          const SizedBox(height: 10,),
+          const SizedBox(
+            height: 10,
+          ),
           FormContainerWidget(
             hintText: "password",
             controller: _passwordController,
             isPasswordField: true,
           ),
           ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const AdminPanel()));
-                },
-                child: const Text("Login"),
-              )
+            onPressed: () {
+              if (_usernameController.text == "admin" &&
+                  _passwordController.text == "1234") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AdminPanel(),
+                  ),
+                );
+              }
+              else{
+                
+              }
+            },
+            child: const Text("Login"),
+          )
         ],
       ),
     );
