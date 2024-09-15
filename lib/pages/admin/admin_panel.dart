@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:workshops_booking/widgets/admin_tile.dart';
 import 'package:workshops_booking/widgets/admin_view_button.dart';
 
-import 'package:workshops_booking/pages/admin/add_new_instructor.dart';
-import 'package:workshops_booking/pages/admin/add_new_location.dart';
-import 'package:workshops_booking/pages/admin/add_new_session.dart';
-import 'package:workshops_booking/pages/admin/add_new_workshop.dart';
+import 'package:workshops_booking/pages/admin/add_items/add_new_instructor.dart';
+import 'package:workshops_booking/pages/admin/add_items/add_new_location.dart';
+import 'package:workshops_booking/pages/admin/add_items/add_new_session.dart';
+import 'package:workshops_booking/pages/admin/add_items/add_new_workshop.dart';
+
+import 'package:workshops_booking/pages/admin/display_items/view_workshops.dart';
 
 class AdminPanel extends StatefulWidget {
   const AdminPanel({super.key});
@@ -27,7 +30,9 @@ class _AdminPanelState extends State<AdminPanel> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -55,7 +60,9 @@ class _AdminPanelState extends State<AdminPanel> {
                 ),
               ],
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -83,21 +90,46 @@ class _AdminPanelState extends State<AdminPanel> {
                 ),
               ],
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             const Divider(
               height: 20,
               thickness: 1,
               endIndent: 0,
               color: Colors.black,
             ),
-            const SizedBox(height: 20,),
-            Column(children: [ 
-              AdminViewButton(displayText: "View all workshops",action: (){},),
-              AdminViewButton(displayText: "View all locations",action: (){},),
-              AdminViewButton(displayText: "View all instructors",action: (){},),
-              AdminViewButton(displayText: "View all sessions",action: (){},)
-              // OutlinedButton(onPressed: (){}, child: const Text("View all Workshops"))
-            ],)
+            const SizedBox(
+              height: 20,
+            ),
+            Column(
+              children: [
+                AdminViewButton(
+                  displayText: "View all workshops",
+                  action: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => const ViewWorkshops(),
+                      ),
+                    );
+                  },
+                ),
+                AdminViewButton(
+                  displayText: "View all locations",
+                  action: () {},
+                ),
+                AdminViewButton(
+                  displayText: "View all instructors",
+                  action: () {},
+                ),
+                AdminViewButton(
+                  displayText: "View all sessions",
+                  action: () {},
+                )
+                // OutlinedButton(onPressed: (){}, child: const Text("View all Workshops"))
+              ],
+            )
           ],
         ),
       ),

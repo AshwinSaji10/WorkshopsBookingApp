@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workshops_booking/widgets/form_container_widget.dart';
-import 'package:workshops_booking/pages/admin_panel.dart';
+import 'package:workshops_booking/pages/admin/admin_panel.dart';
 
 class AdminLogin extends StatefulWidget {
   const AdminLogin({super.key});
