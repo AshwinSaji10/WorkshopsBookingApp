@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:workshops_booking/models/workshops.dart';
 import 'package:workshops_booking/services/database_service.dart';
@@ -29,7 +30,8 @@ class _ViewWorkshopsState extends State<ViewWorkshops> {
               //   title: Text(workshop.wname!),
               // );
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 margin:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 height: 80,
@@ -45,28 +47,51 @@ class _ViewWorkshopsState extends State<ViewWorkshops> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(children: [ 
-                          const Text("id:"),
-                          Text(workshop.wid!),
-                    
-                        ],),
-                        Row(children: [ 
-                          const Text("name:"),
-                          Text(workshop.wname!),
-                    
-                        ],),
-                        Row(children: [ 
-                          const Text("subject:"),
-                          Text(workshop.wsubject!),
-                    
-                        ],),
-                        
-                        
+                        Row(
+                          children: [
+                            const Text("id:"),
+                            Text(workshop.wid!),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text("name:"),
+                            Text(workshop.wname!),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text("subject:"),
+                            Text(workshop.wsubject!),
+                          ],
+                        ),
                       ],
                     ),
-                    const Icon(Icons.delete)
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(
+                              () {
+                                _dbService.deleteWorkshops(workshop.wid!);
+                              },
+                            );
+                          },
+                          icon: const Icon(Icons.delete),
+                        ),
+                        IconButton(
+                            onPressed: () {}, icon: const Icon(Icons.edit))
+                      ],
+                    )
+
+                    // Column(
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+
+                    //   ],
+                    // )
                   ],
-                  
                 ),
               );
             },

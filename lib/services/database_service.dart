@@ -69,4 +69,9 @@ class DatabaseService {
         .toList();
     return workshops;
   }
+
+  void deleteWorkshops(String id) async{
+    final db=await database;
+    await db.rawDelete('''DELETE FROM $_workshopTableName WHERE $_workshopWidColumnName='$id' ''');
+  }
 }

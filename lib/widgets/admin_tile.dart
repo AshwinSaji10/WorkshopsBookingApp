@@ -10,8 +10,8 @@ class AdminTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-          height: 80,
-          width: 170,
+          height: 70,
+          width: 150,
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
