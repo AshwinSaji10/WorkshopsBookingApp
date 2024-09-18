@@ -34,8 +34,9 @@ class _AdminPanelState extends State<AdminPanel> {
             Container(
               margin: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(66, 68, 137, 255),
-                  borderRadius: BorderRadius.circular(10)),
+                color: const Color.fromARGB(66, 68, 137, 255),
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: Column(
                 children: [
                   const SizedBox(
@@ -79,10 +80,8 @@ class _AdminPanelState extends State<AdminPanel> {
                           );
                         },
                       ),
-                      
                     ],
                   ),
-                  
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -128,74 +127,99 @@ class _AdminPanelState extends State<AdminPanel> {
             // const SizedBox(
             //   height: 20,
             // ),
-            Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "View Tables",
-                        style: TextStyle(fontSize: 30),
-                      ),
-                    ],
-                  ),
-                ),
-                AdminViewButton(
-                  displayText: "View all workshops",
-                  action: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => const ViewWorkshops(),
-                      ),
-                    );
-                  },
-                ),
-                AdminViewButton(
-                  displayText: "View all locations",
-                  action: () {},
-                ),
-                AdminViewButton(
-                  displayText: "View all instructors",
-                  action: () {},
-                ),
-                AdminViewButton(
-                  displayText: "View all sessions",
-                  action: () {},
-                )
-                // OutlinedButton(onPressed: (){}, child: const Text("View all Workshops"))
-              ],
-            ),
-            const Divider(
-              height: 20,
-              thickness: 1,
-              endIndent: 0,
-              color: Colors.black,
-            ),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              margin: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(66, 68, 137, 255),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
                 children: [
-                  Text(
-                    "User Data",
-                    style: TextStyle(fontSize: 30),
+                  const SizedBox(
+                    height: 10,
                   ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "View Tables",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AdminViewButton(
+                    displayText: "View all workshops",
+                    action: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => const ViewWorkshops(),
+                        ),
+                      );
+                    },
+                  ),
+                  AdminViewButton(
+                    displayText: "View all locations",
+                    action: () {},
+                  ),
+                  AdminViewButton(
+                    displayText: "View all instructors",
+                    action: () {},
+                  ),
+                  AdminViewButton(
+                    displayText: "View all sessions",
+                    action: () {},
+                  ),
+                  const SizedBox(height:20)
+                  // OutlinedButton(onPressed: (){}, child: const Text("View all Workshops"))
                 ],
               ),
             ),
-            AdminViewButton(
-              displayText: "View all users",
-              action: () {},
+            // const Divider(
+            //   height: 20,
+            //   thickness: 1,
+            //   endIndent: 0,
+            //   color: Colors.black,
+            // ),
+            Container(
+              margin: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(66, 68, 137, 255),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height:10),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "User Data",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AdminViewButton(
+                    displayText: "View all users",
+                    action: () {},
+                  ),
+                  AdminViewButton(
+                    displayText: "View all transactions",
+                    action: () {},
+                  ),
+                  const SizedBox(height:20)
+                ],
+              ),
             ),
-            AdminViewButton(
-              displayText: "View all transactions",
-              action: () {},
-            ),
+            const SizedBox(height:20)
           ],
         ),
       ),
