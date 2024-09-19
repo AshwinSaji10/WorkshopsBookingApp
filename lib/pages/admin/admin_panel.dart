@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:workshops_booking/pages/admin/display_items/view_instructors.dart';
+import 'package:workshops_booking/pages/admin/display_items/view_locations.dart';
 
 import 'package:workshops_booking/widgets/admin_tile.dart';
 import 'package:workshops_booking/widgets/admin_view_button.dart';
@@ -164,11 +166,25 @@ class _AdminPanelState extends State<AdminPanel> {
                   ),
                   AdminViewButton(
                     displayText: "View all locations",
-                    action: () {},
+                    action: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => const ViewLocations(),
+                        ),
+                      );
+                    },
                   ),
                   AdminViewButton(
                     displayText: "View all instructors",
-                    action: () {},
+                    action: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => const ViewInstructors(),
+                        ),
+                      );
+                    },
                   ),
                   AdminViewButton(
                     displayText: "View all sessions",
