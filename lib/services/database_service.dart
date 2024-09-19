@@ -2,6 +2,8 @@ import 'package:sqflite/sqflite.dart';
 // import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
 import 'package:workshops_booking/models/workshops.dart';
+import 'package:workshops_booking/models/locations.dart';
+import 'package:workshops_booking/models/instructors.dart';
 
 class DatabaseService {
   static Database? _db;
@@ -126,6 +128,7 @@ class DatabaseService {
     return database;
   }
 
+  //insert data
   void addWorkshops(String wid, String wname, String wsubject) async {
     final db = await database;
     await db.insert(
@@ -150,6 +153,20 @@ class DatabaseService {
     );
   }
 
+  void addInstructor(String iid, String iname, String gender, int age) async {
+    final db = await database;
+    await db.insert(
+      _instructorTableName,
+      {
+        _instructorIidColumnName: iid,
+        _instructorInameColumnName: iname,
+        _instructorGenderColumnName: gender,
+        _instructorAgeColumnName: age
+      },
+    );
+  }
+
+  //display
   Future<List<Workshops>> getWorkshops() async {
     final db = await database;
     final data = await db.query(_workshopTableName);
@@ -165,6 +182,39 @@ class DatabaseService {
     return workshops;
   }
 
+  Future<List<Locations>> getLocations() async {
+    final db = await database;
+    final data = await db.query(_locationTableName);
+
+    List<Locations> locations = data
+        .map(
+          (e) => Locations(
+              lid: e[_locationLidColumnName] as String,
+              lname: e[_locationLnameColumnName] as String,
+              capacity: e[_locationCapacityColumnName] as int),
+        )
+        .toList();
+    return locations;
+  }
+
+  Future<List<Instructors>> getInstructors() async {
+    final db = await database;
+    final data = await db.query(_instructorTableName);
+
+    List<Instructors> instructors = data
+        .map(
+          (e) => Instructors(
+            iid: e[_instructorIidColumnName] as String,
+            iname: e[_instructorInameColumnName] as String,
+            gender: e[_instructorGenderColumnName] as String,
+            age: e[_instructorAgeColumnName] as int,
+          ),
+        )
+        .toList();
+    return instructors;
+  }
+
+//delete
   void deleteWorkshops(String id) async {
     final db = await database;
     await db.rawDelete(
@@ -175,5 +225,11 @@ class DatabaseService {
     final db = await database;
     await db.rawDelete(
         '''DELETE FROM $_locationTableName WHERE $_locationLidColumnName='$id' ''');
+  }
+
+  void deleteInstructor(String id) async {
+    final db = await database;
+    await db.rawDelete(
+        '''DELETE FROM $_instructorTableName WHERE $_instructorIidColumnName='$id' ''');
   }
 }
