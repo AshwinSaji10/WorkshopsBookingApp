@@ -166,38 +166,45 @@ class _AddNewWorkshopState extends State<AddNewWorkshop> {
               height: 20,
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_idController.text == '' ||
                     _nameController.text == '' ||
-                    selectedValue == '') {
+                    selectedValue == null) {
                   Fluttertoast.showToast(
-                      msg: "Empty fields",
+                    msg: "Empty fields",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                } else {
+                  try {
+                    // Await the asynchronous addWorkshops function
+                    await _dbService.addWorkshops(
+                      _idController.text,
+                      _nameController.text,
+                      selectedValue!,
+                    );
+
+                    Fluttertoast.showToast(
+                      msg: "Workshop added",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.red,
+                      backgroundColor: Colors.green,
                       textColor: Colors.white,
-                      fontSize: 16.0);
-                } else {
-                  try {
-                    _dbService.addWorkshops(_idController.text,
-                        _nameController.text, selectedValue!);
-                    Fluttertoast.showToast(
-                        msg: "Workshop added",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.green,
-                        textColor: Colors.white,
-                        fontSize: 16.0);
+                      fontSize: 16.0,
+                    );
 
-                    setState(() {
-                      _idController.clear();
-                      _nameController.clear();
-                      selectedValue=null;
-                    });
-
-                    // _subjectController.clear();
+                    setState(
+                      () {
+                        _idController.clear();
+                        _nameController.clear();
+                        selectedValue = null;
+                      },
+                    );
                   } catch (e) {
                     Fluttertoast.showToast(
                       msg: "Database error: ${e.toString()}",

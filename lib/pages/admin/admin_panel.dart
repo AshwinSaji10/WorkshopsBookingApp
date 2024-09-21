@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:workshops_booking/pages/admin/display_items/view_instructors.dart';
 import 'package:workshops_booking/pages/admin/display_items/view_locations.dart';
+import 'package:workshops_booking/pages/admin/display_items/view_sessions.dart';
 
 import 'package:workshops_booking/widgets/admin_tile.dart';
 import 'package:workshops_booking/widgets/admin_view_button.dart';
@@ -188,7 +189,14 @@ class _AdminPanelState extends State<AdminPanel> {
                   ),
                   AdminViewButton(
                     displayText: "View all sessions",
-                    action: () {},
+                    action: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => const ViewSessions(),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height:20)
                   // OutlinedButton(onPressed: (){}, child: const Text("View all Workshops"))

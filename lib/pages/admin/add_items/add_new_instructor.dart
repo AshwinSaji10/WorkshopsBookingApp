@@ -64,7 +64,7 @@ class _AddNewInstructorState extends State<AddNewInstructor> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_idController.text.isEmpty ||
                     _nameController.text.isEmpty ||
                     _genderController.text.isEmpty ||
@@ -79,7 +79,7 @@ class _AddNewInstructorState extends State<AddNewInstructor> {
                   );
                 } else {
                   try {
-                    _dbService.addInstructor(
+                    await _dbService.addInstructor(
                       _idController.text,
                       _nameController.text,
                       _genderController.text,

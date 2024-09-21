@@ -22,7 +22,6 @@ class _AddNewLocationState extends State<AddNewLocation> {
     _idController.dispose();
     _nameController.dispose();
     _capacityController.dispose();
-
     super.dispose();
   }
 
@@ -36,73 +35,65 @@ class _AddNewLocationState extends State<AddNewLocation> {
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FormContainerWidget(
               hintText: "Location id",
               controller: _idController,
               isPasswordField: false,
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             FormContainerWidget(
               hintText: "Location name",
               controller: _nameController,
               isPasswordField: false,
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             FormContainerWidget(
               hintText: "Venue Capacity",
               controller: _capacityController,
               inputType: TextInputType.number,
               isPasswordField: false,
             ),
-
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                if (_idController.text == '' ||
-                    _nameController.text == '' ||
-                    _capacityController.text == '') {
+              onPressed: () async {
+                if (_idController.text.isEmpty ||
+                    _nameController.text.isEmpty ||
+                    _capacityController.text.isEmpty) {
                   Fluttertoast.showToast(
-                      msg: "Empty fields",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
+                    msg: "Empty fields",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
                 } else {
                   try {
-                    _dbService.addLocation(_idController.text,
-                        _nameController.text, int.parse(_capacityController.text));
+                    await _dbService.addLocation(
+                      _idController.text,
+                      _nameController.text,
+                      int.parse(_capacityController.text),
+                    );
                     Fluttertoast.showToast(
-                        msg: "Location added",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.green,
-                        textColor: Colors.white,
-                        fontSize: 16.0);
+                      msg: "Location added",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
 
                     setState(() {
                       _idController.clear();
                       _nameController.clear();
                       _capacityController.clear();
                     });
-
-                    // _subjectController.clear();
                   } catch (e) {
                     Fluttertoast.showToast(
                       msg: "Database error: ${e.toString()}",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
                       backgroundColor: Colors.red,
                       textColor: Colors.white,
                       fontSize: 16.0,
