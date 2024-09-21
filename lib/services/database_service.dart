@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 import 'package:workshops_booking/models/workshops.dart';
 import 'package:workshops_booking/models/locations.dart';
 import 'package:workshops_booking/models/instructors.dart';
+import 'package:workshops_booking/models/sessions.dart';
 
 class DatabaseService {
   static Database? _db;
@@ -100,9 +101,9 @@ class DatabaseService {
           $_sessionDateColumnName TEXT NOT NULL,
           $_sessionStartColumnName TEXT NOT NULL,
           $_sessionEndColumnName TEXT NOT NULL,
-          FOREIGN KEY($_workshopWidColumnName) REFERENCES $_workshopTableName($_workshopWidColumnName),
-          FOREIGN KEY($_locationLidColumnName) REFERENCES $_locationTableName($_locationLidColumnName),
-          FOREIGN KEY($_instructorIidColumnName) REFERENCES $_instructorTableName($_instructorIidColumnName)
+          FOREIGN KEY($_workshopWidColumnName) REFERENCES $_workshopTableName($_workshopWidColumnName) ON DELETE CASCADE,
+          FOREIGN KEY($_locationLidColumnName) REFERENCES $_locationTableName($_locationLidColumnName) ON DELETE CASCADE,
+          FOREIGN KEY($_instructorIidColumnName) REFERENCES $_instructorTableName($_instructorIidColumnName) ON DELETE CASCADE
       )
       ''');
         db.execute('''
@@ -119,51 +120,146 @@ class DatabaseService {
           $_bookingIdColumnName TEXT PRIMARY KEY,
           $_userIdColumnName TEXT NOT NULL,
           $_sessionIdColumnName TEXT NOT NULL,
-          FOREIGN KEY($_userIdColumnName) REFERENCES $_userTableName($_userIdColumnName),
-          FOREIGN KEY($_sessionIdColumnName) REFERENCES $_sessionTableName($_sessionIdColumnName)
+          FOREIGN KEY($_userIdColumnName) REFERENCES $_userTableName($_userIdColumnName) ON DELETE CASCADE,
+          FOREIGN KEY($_sessionIdColumnName) REFERENCES $_sessionTableName($_sessionIdColumnName) ON DELETE CASCADE
       )
       ''');
+      },
+      onOpen: (db) async {
+        await db.execute("PRAGMA foreign_keys = ON");
       },
     );
     return database;
   }
 
   //insert data
-  void addWorkshops(String wid, String wname, String wsubject) async {
+  Future<void> addWorkshops(String wid, String wname, String wsubject) async {
     final db = await database;
-    await db.insert(
-      _workshopTableName,
-      {
-        _workshopWidColumnName: wid,
-        _workshopWnameColumnName: wname,
-        _workshopSubjectColumnName: wsubject
-      },
-    );
+    try {
+      await db.insert(
+        _workshopTableName,
+        {
+          _workshopWidColumnName: wid,
+          _workshopWnameColumnName: wname,
+          _workshopSubjectColumnName: wsubject
+        },
+        conflictAlgorithm: ConflictAlgorithm.abort, // Abort on conflict
+      );
+    } catch (e) {
+      if (e is DatabaseException &&
+          e.toString().contains('UNIQUE constraint failed')) {
+        throw Exception(
+            'Primary key violation: Workshop ID $wid already exists.');
+      } else {
+        throw Exception('Database error: $e');
+      }
+    }
   }
 
-  void addLocation(String lid, String lname, int capacity) async {
+  Future<void> addLocation(String lid, String lname, int capacity) async {
     final db = await database;
-    await db.insert(
-      _locationTableName,
-      {
-        _locationLidColumnName: lid,
-        _locationLnameColumnName: lname,
-        _locationCapacityColumnName: capacity
-      },
-    );
+    try {
+      await db.insert(
+        _locationTableName,
+        {
+          _locationLidColumnName: lid,
+          _locationLnameColumnName: lname,
+          _locationCapacityColumnName: capacity
+        },
+        conflictAlgorithm: ConflictAlgorithm.abort, // Abort on conflict
+      );
+    } catch (e) {
+      if (e is DatabaseException &&
+          e.toString().contains('UNIQUE constraint failed')) {
+        throw Exception(
+            'Primary key violation: Location ID $lid already exists.');
+      } else {
+        throw Exception('Database error: $e');
+      }
+    }
   }
 
-  void addInstructor(String iid, String iname, String gender, int age) async {
+  Future<void> addInstructor(
+      String iid, String iname, String gender, int age) async {
     final db = await database;
-    await db.insert(
-      _instructorTableName,
-      {
-        _instructorIidColumnName: iid,
-        _instructorInameColumnName: iname,
-        _instructorGenderColumnName: gender,
-        _instructorAgeColumnName: age
-      },
-    );
+    try {
+      final existingInstructor = await db.rawQuery(
+          'SELECT * FROM $_instructorTableName WHERE $_instructorIidColumnName = ?',
+          [iid]);
+
+      if (existingInstructor.isNotEmpty) {
+        throw Exception('Instructor with ID $iid already exists.');
+      }
+
+      await db.insert(
+        _instructorTableName,
+        {
+          _instructorIidColumnName: iid,
+          _instructorInameColumnName: iname,
+          _instructorGenderColumnName: gender,
+          _instructorAgeColumnName: age
+        },
+        conflictAlgorithm: ConflictAlgorithm.abort, // Abort on conflict
+      );
+    } catch (e) {
+      if (e is DatabaseException &&
+          e.toString().contains('UNIQUE constraint failed')) {
+        throw Exception(
+            'Primary key violation: Instructor ID $iid already exists.');
+      } else {
+        throw Exception('Database error: $e');
+      }
+    }
+  }
+
+  Future<void> addSession(String sid, String wid, String lid, String iid,
+      String date, String startTime, String endTime) async {
+    final db = await database;
+    try {
+      await db.insert(
+        _sessionTableName,
+        {
+          _sessionIdColumnName: sid,
+          _workshopWidColumnName: wid,
+          _locationLidColumnName: lid,
+          _instructorIidColumnName: iid,
+          _sessionDateColumnName: date,
+          _sessionStartColumnName: startTime,
+          _sessionEndColumnName: endTime,
+        },
+        conflictAlgorithm: ConflictAlgorithm.abort, // Abort on conflict
+      );
+    } catch (e) {
+      if (e is DatabaseException &&
+          e.toString().contains('UNIQUE constraint failed')) {
+        throw Exception(
+            'Primary key violation: Session ID $sid already exists.');
+      } else {
+        throw Exception('Database error: $e');
+      }
+    }
+  }
+
+  Future<void> addUser(String uid, String uname, String password) async {
+    final db = await database;
+    try {
+      await db.insert(
+        _userTableName,
+        {
+          _userIdColumnName: uid,
+          _userNameColumnName: uname,
+          _userPasswordColumnName: password,
+        },
+        conflictAlgorithm: ConflictAlgorithm.abort, // Abort on conflict
+      );
+    } catch (e) {
+      if (e is DatabaseException &&
+          e.toString().contains('UNIQUE constraint failed')) {
+        throw Exception('Primary key violation: User ID $uid already exists.');
+      } else {
+        throw Exception('Database error: $e');
+      }
+    }
   }
 
   //display
@@ -214,6 +310,26 @@ class DatabaseService {
     return instructors;
   }
 
+  Future<List<Sessions>> getSessions() async {
+    final db = await database;
+    final data = await db.query(_sessionTableName);
+
+    List<Sessions> sessions = data
+        .map(
+          (e) => Sessions(
+            sid: e[_sessionIdColumnName] as String,
+            wid: e[_workshopWidColumnName] as String,
+            lid: e[_locationLidColumnName] as String,
+            iid: e[_instructorIidColumnName] as String,
+            date: e[_sessionDateColumnName] as String,
+            startTime: e[_sessionStartColumnName] as String,
+            endTime: e[_sessionEndColumnName] as String,
+          ),
+        )
+        .toList();
+    return sessions;
+  }
+
 //delete
   void deleteWorkshops(String id) async {
     final db = await database;
@@ -231,5 +347,27 @@ class DatabaseService {
     final db = await database;
     await db.rawDelete(
         '''DELETE FROM $_instructorTableName WHERE $_instructorIidColumnName='$id' ''');
+  }
+
+  void deleteSession(String id) async {
+    final db = await database;
+    await db.rawDelete(
+        '''DELETE FROM $_sessionTableName WHERE $_sessionIdColumnName = '$id' ''');
+  }
+
+  //user login
+  Future<int> userLogin(String uid, String password) async {
+    final db = await database;
+
+    final result = await db.rawQuery(
+      '''SELECT * FROM $_userTableName WHERE $_userIdColumnName = ? AND $_userPasswordColumnName = ?''',
+      [uid, password],
+    );
+
+    if (result.isNotEmpty) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 }
