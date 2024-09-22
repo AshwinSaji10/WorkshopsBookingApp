@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:workshops_booking/widgets/form_container_widget.dart';
 import 'package:workshops_booking/pages/admin/admin_panel.dart';
 
@@ -27,7 +28,6 @@ class _AdminLoginState extends State<AdminLogin> {
       margin: const EdgeInsets.only(left: 10, right: 10),
       child: Column(
         children: [
-          const Text("Admin Login"),
           FormContainerWidget(
             hintText: "username",
             controller: _usernameController,
@@ -41,6 +41,9 @@ class _AdminLoginState extends State<AdminLogin> {
             controller: _passwordController,
             isPasswordField: true,
           ),
+          const SizedBox(
+            height: 10,
+          ),
           ElevatedButton(
             onPressed: () {
               if (_usernameController.text == "admin" &&
@@ -51,9 +54,15 @@ class _AdminLoginState extends State<AdminLogin> {
                     builder: (context) => const AdminPanel(),
                   ),
                 );
-              }
-              else{
-                
+              } else {
+                Fluttertoast.showToast(
+                    msg: "Invalid details",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
               }
             },
             child: const Text("Login"),

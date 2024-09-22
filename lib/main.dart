@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:workshops_booking/pages/user/login_page.dart';
+import 'package:workshops_booking/pages/login_page.dart';
 
 void main() {
   runApp(const MainApp());

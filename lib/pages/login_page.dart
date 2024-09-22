@@ -23,11 +23,16 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title:
+            index == 0 ? const Text("User Login") : const Text("Admin Login"),
+            centerTitle: true,
+      ),
       body: Center(
         child: Container(
-          margin: const EdgeInsets.only(top: 50),
+          margin: const EdgeInsets.only(top: 20, bottom: 20),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             // crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               index == 0
@@ -45,35 +50,30 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child: const Text("Register user"),
                         ),
-                        Container(
-                          child: TextButton(
-                            onPressed: () {
-                              setState(
-                                () {
-                                  index = 1;
-                                },
-                              );
-                            },
-                            child: const Text("switch to Admin Login"),
-                          ),
-                        ),
                       ],
                     )
-                  : Column(
-                      children: [
-                        const AdminLogin(),
-                        TextButton(
-                          onPressed: () {
-                            setState(
-                              () {
-                                index = 0;
-                              },
-                            );
+                  : const AdminLogin(),
+              index == 0
+                  ? TextButton(
+                      onPressed: () {
+                        setState(
+                          () {
+                            index = 1;
                           },
-                          child: const Text("switch to User Login"),
-                        ),
-                      ],
+                        );
+                      },
+                      child: const Text("switch to Admin Login"),
                     )
+                  : TextButton(
+                      onPressed: () {
+                        setState(
+                          () {
+                            index = 0;
+                          },
+                        );
+                      },
+                      child: const Text("switch to User Login"),
+                    ),
             ],
           ),
         ),

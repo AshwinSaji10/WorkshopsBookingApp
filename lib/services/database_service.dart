@@ -1,10 +1,12 @@
 import 'package:sqflite/sqflite.dart';
 // import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
+import 'package:workshops_booking/models/search_model.dart';
 import 'package:workshops_booking/models/workshops.dart';
 import 'package:workshops_booking/models/locations.dart';
 import 'package:workshops_booking/models/instructors.dart';
 import 'package:workshops_booking/models/sessions.dart';
+import 'package:workshops_booking/models/users.dart';
 
 class DatabaseService {
   static Database? _db;
@@ -330,6 +332,23 @@ class DatabaseService {
     return sessions;
   }
 
+  //user details
+  Future<List<Users>> getUsers() async {
+  final db = await database;
+  final data = await db.query(
+    _userTableName,
+    columns: [_userIdColumnName, _userNameColumnName], 
+  );
+
+  List<Users> users = data.map((e) => Users(
+        uid: e[_userIdColumnName] as String,
+        uname: e[_userNameColumnName] as String,
+      )).toList();
+
+  return users;
+}
+
+
 //delete
   void deleteWorkshops(String id) async {
     final db = await database;
@@ -370,4 +389,24 @@ class DatabaseService {
       return 0;
     }
   }
+
+  //search for sessions
+  // Future<List<SessionDetails>> searchSession(String workshopSubject,String sessionDate) async{
+  //   final db = await database;
+  //   final data = await db.rawQuery('''
+  //   SELECT 
+  //     sessions.$_sessionIdColumnName AS sessionId, 
+  //     workshops.$_workshopWnameColumnName AS workshopName, 
+  //     instructors.$_instructorInameColumnName AS instructorName
+  //   FROM 
+  //     $_sessionTableName AS sessions
+  //   JOIN 
+  //     $_workshopTableName AS workshops ON sessions.$_workshopWidColumnName = workshops.$_workshopWidColumnName
+  //   JOIN 
+  //     $_instructorTableName AS instructors ON sessions.$_instructorIidColumnName = instructors.$_instructorIidColumnName
+  //   WHERE 
+  //     workshops.$_workshopSubjectColumnName = ? 
+  //     AND sessions.$_sessionDateColumnName = ?
+  // ''', [workshopSubject, sessionDate]);
+  // }
 }

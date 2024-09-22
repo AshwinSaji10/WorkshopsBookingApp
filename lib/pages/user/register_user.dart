@@ -89,6 +89,7 @@ class _RegisterUserState extends State<RegisterUser> {
                         textColor: Colors.white,
                         fontSize: 16.0,
                       );
+                      Navigator.pop(context);
                     } catch (e) {
                       Fluttertoast.showToast(
                         msg: "Database Error",
@@ -98,8 +99,6 @@ class _RegisterUserState extends State<RegisterUser> {
                         textColor: Colors.white,
                         fontSize: 16.0,
                       );
-                    } finally {
-                      Navigator.pop(context);
                     }
                   }
                 },

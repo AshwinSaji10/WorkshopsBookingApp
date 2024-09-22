@@ -31,7 +31,6 @@ class _UserLoginState extends State<UserLogin> {
       margin: const EdgeInsets.only(left: 10, right: 10),
       child: Column(
         children: [
-          const Text("User Login"),
           FormContainerWidget(
             hintText: "university registration number",
             controller: _uidController,
@@ -44,6 +43,9 @@ class _UserLoginState extends State<UserLogin> {
             hintText: "password",
             controller: _passwordController,
             isPasswordField: true,
+          ),
+          const SizedBox(
+            height: 10,
           ),
           ElevatedButton(
             onPressed: () async {
@@ -63,7 +65,7 @@ class _UserLoginState extends State<UserLogin> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const UserLanding(),
+                      builder: (context) => UserLanding(uid: _uidController.text,),
                     ),
                   );
                 } else {
