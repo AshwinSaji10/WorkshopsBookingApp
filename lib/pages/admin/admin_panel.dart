@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:workshops_booking/pages/admin/display_items/view_instructors.dart';
 import 'package:workshops_booking/pages/admin/display_items/view_locations.dart';
 import 'package:workshops_booking/pages/admin/display_items/view_sessions.dart';
+import 'package:workshops_booking/pages/admin/display_items/view_users.dart';
 
 import 'package:workshops_booking/widgets/admin_tile.dart';
 import 'package:workshops_booking/widgets/admin_view_button.dart';
@@ -233,10 +234,17 @@ class _AdminPanelState extends State<AdminPanel> {
                   ),
                   AdminViewButton(
                     displayText: "View all users",
-                    action: () {},
+                    action: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => const ViewUsers(),
+                        ),
+                      );
+                    },
                   ),
                   AdminViewButton(
-                    displayText: "View all transactions",
+                    displayText: "View all bookings",
                     action: () {},
                   ),
                   const SizedBox(height:20)
