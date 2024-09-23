@@ -334,20 +334,21 @@ class DatabaseService {
 
   //user details
   Future<List<Users>> getUsers() async {
-  final db = await database;
-  final data = await db.query(
-    _userTableName,
-    columns: [_userIdColumnName, _userNameColumnName], 
-  );
+    final db = await database;
+    final data = await db.query(
+      _userTableName,
+      columns: [_userIdColumnName, _userNameColumnName],
+    );
 
-  List<Users> users = data.map((e) => Users(
-        uid: e[_userIdColumnName] as String,
-        uname: e[_userNameColumnName] as String,
-      )).toList();
+    List<Users> users = data
+        .map((e) => Users(
+              uid: e[_userIdColumnName] as String,
+              uname: e[_userNameColumnName] as String,
+            ))
+        .toList();
 
-  return users;
-}
-
+    return users;
+  }
 
 //delete
   void deleteWorkshops(String id) async {
@@ -391,22 +392,43 @@ class DatabaseService {
   }
 
   //search for sessions
-  // Future<List<SessionDetails>> searchSession(String workshopSubject,String sessionDate) async{
-  //   final db = await database;
-  //   final data = await db.rawQuery('''
-  //   SELECT 
-  //     sessions.$_sessionIdColumnName AS sessionId, 
-  //     workshops.$_workshopWnameColumnName AS workshopName, 
-  //     instructors.$_instructorInameColumnName AS instructorName
-  //   FROM 
-  //     $_sessionTableName AS sessions
-  //   JOIN 
-  //     $_workshopTableName AS workshops ON sessions.$_workshopWidColumnName = workshops.$_workshopWidColumnName
-  //   JOIN 
-  //     $_instructorTableName AS instructors ON sessions.$_instructorIidColumnName = instructors.$_instructorIidColumnName
-  //   WHERE 
-  //     workshops.$_workshopSubjectColumnName = ? 
-  //     AND sessions.$_sessionDateColumnName = ?
-  // ''', [workshopSubject, sessionDate]);
-  // }
+  Future<List<SessionDetails>> searchSession(
+      String workshopSubject, String sessionDate) async {
+    final db = await database;
+
+    final data = await db.rawQuery('''
+    SELECT 
+      s.$_sessionIdColumnName AS sessionId, 
+      w.$_workshopWnameColumnName AS workshopName, 
+      i.$_instructorInameColumnName AS instructorName,
+      s.$_sessionStartColumnName AS startTime,
+      s.$_sessionEndColumnName AS endTime
+    FROM 
+      $_sessionTableName s
+    JOIN 
+      $_workshopTableName w ON s.$_workshopWidColumnName = w.$_workshopWidColumnName
+    JOIN 
+      $_instructorTableName i ON s.$_instructorIidColumnName = i.$_instructorIidColumnName
+    WHERE 
+      s.$_sessionDateColumnName = ? 
+      AND w.$_workshopSubjectColumnName = ?
+  ''', [sessionDate, workshopSubject]);
+
+    // print(sessionDate+workshopSubject);
+    // print(data);
+
+    List<SessionDetails> sessionDetails = data
+        .map(
+          (e) => SessionDetails(
+            sessionId: e['sessionId'] as String,
+            workshopName: e['workshopName'] as String,
+            instructorName: e['instructorName'] as String,
+            startTime: e['startTime'] as String,
+            endTime: e['endTime'] as String,
+          ),
+        )
+        .toList();
+
+    return sessionDetails;
+  }
 }
