@@ -264,6 +264,42 @@ class DatabaseService {
     }
   }
 
+  Future<void> addBooking(String bid, String sid, String uid) async {
+    final db = await database;
+    try {
+      // Check if a booking with the same user and session already exists using rawQuery
+      final existingBooking = await db.rawQuery('''
+      SELECT * FROM $_bookingTableName 
+      WHERE $_userIdColumnName = ? 
+      AND $_sessionIdColumnName = ?
+      ''', [uid, sid]);
+
+      if (existingBooking.isNotEmpty) {
+        throw Exception(
+            'A booking already exists for user ID $uid and session ID $sid.');
+      }
+
+      // If no existing booking is found, insert the new booking
+      await db.insert(
+        _bookingTableName,
+        {
+          _bookingIdColumnName: bid,
+          _sessionIdColumnName: sid,
+          _userIdColumnName: uid,
+        },
+        conflictAlgorithm: ConflictAlgorithm.abort, // Abort on conflict
+      );
+    } catch (e) {
+      if (e is DatabaseException &&
+          e.toString().contains('UNIQUE constraint failed')) {
+        throw Exception(
+            'Primary key violation: Booking ID $bid already exists.');
+      } else {
+        throw Exception('Database error: $e');
+      }
+    }
+  }
+
   //display
   Future<List<Workshops>> getWorkshops() async {
     final db = await database;
@@ -375,6 +411,22 @@ class DatabaseService {
         '''DELETE FROM $_sessionTableName WHERE $_sessionIdColumnName = '$id' ''');
   }
 
+  void deleteBooking(String bookingId) async {
+    final db = await database;
+    try {
+      int result = await db.rawDelete(
+        '''DELETE FROM $_bookingTableName WHERE $_bookingIdColumnName = ?''',
+        [bookingId],
+      );
+
+      if (result == 0) {
+        throw Exception('Booking with ID $bookingId does not exist.');
+      }
+    } catch (e) {
+      throw Exception('Database error while deleting booking: $e');
+    }
+  }
+
   //user login
   Future<int> userLogin(String uid, String password) async {
     final db = await database;
@@ -430,5 +482,18 @@ class DatabaseService {
         .toList();
 
     return sessionDetails;
+  }
+
+  //check if booking is present
+  Future<bool> checkBookingExists(String sessionId, String userId) async {
+    final db = await database;
+
+    final result = await db.rawQuery('''
+    SELECT * FROM $_bookingTableName 
+    WHERE $_sessionIdColumnName = ? 
+    AND $_userIdColumnName = ?
+  ''', [sessionId, userId]);
+
+    return result.isNotEmpty;
   }
 }
