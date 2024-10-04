@@ -289,7 +289,7 @@ class _UserLandingState extends State<UserLanding> {
                                                 fontSize: 16.0,
                                               );
                                             },
-                                            child: const Text("Already Booked"),
+                                            child: const Text("Cancel booking"),
                                           )
                                         : ElevatedButton(
                                             onPressed: () async {
