@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:workshops_booking/pages/admin/display_items/view_bookings.dart';
 import 'package:workshops_booking/pages/admin/display_items/view_instructors.dart';
 import 'package:workshops_booking/pages/admin/display_items/view_locations.dart';
 import 'package:workshops_booking/pages/admin/display_items/view_sessions.dart';
@@ -199,7 +200,7 @@ class _AdminPanelState extends State<AdminPanel> {
                       );
                     },
                   ),
-                  const SizedBox(height:20)
+                  const SizedBox(height: 20)
                   // OutlinedButton(onPressed: (){}, child: const Text("View all Workshops"))
                 ],
               ),
@@ -218,7 +219,7 @@ class _AdminPanelState extends State<AdminPanel> {
               ),
               child: Column(
                 children: [
-                  const SizedBox(height:10),
+                  const SizedBox(height: 10),
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20),
                     child: const Row(
@@ -245,13 +246,20 @@ class _AdminPanelState extends State<AdminPanel> {
                   ),
                   AdminViewButton(
                     displayText: "View all bookings",
-                    action: () {},
+                    action: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => const ViewBookings(),
+                        ),
+                      );
+                    },
                   ),
-                  const SizedBox(height:20)
+                  const SizedBox(height: 20)
                 ],
               ),
             ),
-            const SizedBox(height:20)
+            const SizedBox(height: 20)
           ],
         ),
       ),
