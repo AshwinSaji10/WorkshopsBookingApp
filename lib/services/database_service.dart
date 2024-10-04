@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 // import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
+import 'package:workshops_booking/models/bookings.dart';
 import 'package:workshops_booking/models/search_model.dart';
 import 'package:workshops_booking/models/workshops.dart';
 import 'package:workshops_booking/models/locations.dart';
@@ -385,6 +386,23 @@ class DatabaseService {
 
     return users;
   }
+
+  Future<List<Bookings>> getBookings() async {
+  final db = await database;
+  final data = await db.query(_bookingTableName);
+
+  List<Bookings> bookings = data
+      .map(
+        (e) => Bookings(
+          bid: e[_bookingIdColumnName] as String,
+          sessionId: e[_sessionIdColumnName] as String,
+          userId: e[_userIdColumnName] as String,
+        ),
+      )
+      .toList();
+  return bookings;
+}
+
 
 //delete
   void deleteWorkshops(String id) async {
