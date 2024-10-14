@@ -277,23 +277,39 @@ class _UserLandingState extends State<UserLanding> {
                                     // Display different buttons based on booking status
                                     isBooked
                                         ? ElevatedButton(
-                                            onPressed: () {
+                                            onPressed: () async {
+                                              try {
+                                                await _dbService.deleteBooking(
+                                                    widget.uid!,
+                                                    session.sessionId);
+                                                Fluttertoast.showToast(
+                                                  msg: "Booking cancelled.",
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  backgroundColor: Colors.blue,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0,
+                                                );
+                                                setState(() {});
+                                              } catch (e) {
+                                                Fluttertoast.showToast(
+                                                  msg:
+                                                      "Cancellation failed: ${e.toString()}",
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  backgroundColor: Colors.red,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0,
+                                                );
+                                              }
                                               // Action for an already booked session
-                                              Fluttertoast.showToast(
-                                                msg:
-                                                    "You have already booked this session.",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                backgroundColor: Colors.blue,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0,
-                                              );
                                             },
                                             child: const Text("Cancel booking"),
                                           )
                                         : ElevatedButton(
                                             onPressed: () async {
-                                            
                                               var uuid = const Uuid();
                                               String bookingId = uuid.v4();
 
@@ -312,6 +328,7 @@ class _UserLandingState extends State<UserLanding> {
                                                   textColor: Colors.white,
                                                   fontSize: 16.0,
                                                 );
+                                                setState(() {});
                                               } catch (e) {
                                                 // Show failure toast
                                                 Fluttertoast.showToast(
