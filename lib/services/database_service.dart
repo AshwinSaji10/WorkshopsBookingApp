@@ -280,7 +280,34 @@ class DatabaseService {
             'A booking already exists for user ID $uid and session ID $sid.');
       }
 
-      // If no existing booking is found, insert the new booking
+      final sessionDetails = await db.rawQuery('''
+      SELECT l.$_locationCapacityColumnName 
+      FROM $_sessionTableName s
+      JOIN $_locationTableName l ON s.$_locationLidColumnName = l.$_locationLidColumnName
+      WHERE s.$_sessionIdColumnName = ?
+      ''', [sid]);
+
+      if (sessionDetails.isEmpty) {
+        throw Exception('Session not found or location information missing.');
+      }
+
+      final venueCapacity =
+          sessionDetails.first[_locationCapacityColumnName] as int;
+
+      
+      final currentBookings = await db.rawQuery('''
+      SELECT COUNT(*) as bookingCount 
+      FROM $_bookingTableName 
+      WHERE $_sessionIdColumnName = ?
+      ''', [sid]);
+
+      final bookingCount = currentBookings.first['bookingCount'] as int;
+
+      if (bookingCount >= venueCapacity) {
+        throw Exception('No available seats for session ID $sid.');
+      }
+
+      // If all conditions satisfied, insert the new booking
       await db.insert(
         _bookingTableName,
         {
@@ -388,21 +415,20 @@ class DatabaseService {
   }
 
   Future<List<Bookings>> getBookings() async {
-  final db = await database;
-  final data = await db.query(_bookingTableName);
+    final db = await database;
+    final data = await db.query(_bookingTableName);
 
-  List<Bookings> bookings = data
-      .map(
-        (e) => Bookings(
-          bid: e[_bookingIdColumnName] as String,
-          sessionId: e[_sessionIdColumnName] as String,
-          userId: e[_userIdColumnName] as String,
-        ),
-      )
-      .toList();
-  return bookings;
-}
-
+    List<Bookings> bookings = data
+        .map(
+          (e) => Bookings(
+            bid: e[_bookingIdColumnName] as String,
+            sessionId: e[_sessionIdColumnName] as String,
+            userId: e[_userIdColumnName] as String,
+          ),
+        )
+        .toList();
+    return bookings;
+  }
 
 //delete
   void deleteWorkshops(String id) async {
@@ -429,16 +455,16 @@ class DatabaseService {
         '''DELETE FROM $_sessionTableName WHERE $_sessionIdColumnName = '$id' ''');
   }
 
-  void deleteBooking(String bookingId) async {
+  Future<void> deleteBooking(String uId, String sId) async {
     final db = await database;
     try {
       int result = await db.rawDelete(
-        '''DELETE FROM $_bookingTableName WHERE $_bookingIdColumnName = ?''',
-        [bookingId],
+        '''DELETE FROM $_bookingTableName WHERE $_userIdColumnName = ? AND $_sessionIdColumnName= ?''',
+        [uId, sId],
       );
 
       if (result == 0) {
-        throw Exception('Booking with ID $bookingId does not exist.');
+        throw Exception('Booking does not exist.');
       }
     } catch (e) {
       throw Exception('Database error while deleting booking: $e');
