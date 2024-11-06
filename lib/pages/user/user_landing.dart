@@ -55,11 +55,19 @@ class _UserLandingState extends State<UserLanding> {
 
   Future<void> performSearch() async {
     if (selectedValue != null && _selectedDate != null) {
+      
       try {
+        // final startTime=DateTime.now();
+
         List<SessionDetails> results = await _dbService.searchSession(
           selectedValue!,
           formatter.format(_selectedDate!),
         );
+
+        // final endTime=DateTime.now();
+
+        // print("Searching time = ${endTime.difference(startTime).inMilliseconds} ms");
+        
         setState(
           () {
             _searchResults = results;
