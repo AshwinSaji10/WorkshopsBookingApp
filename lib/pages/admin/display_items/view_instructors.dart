@@ -89,12 +89,12 @@ class _ViewInstructorsState extends State<ViewInstructors> {
                             },
                             icon: const Icon(Icons.delete),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              // Navigate to an edit page or handle edit logic
-                            },
-                            icon: const Icon(Icons.edit),
-                          ),
+                          // IconButton(
+                          //   onPressed: () {
+                          //     // Navigate to an edit page or handle edit logic
+                          //   },
+                          //   icon: const Icon(Icons.edit),
+                          // ),
                         ],
                       ),
                     ],

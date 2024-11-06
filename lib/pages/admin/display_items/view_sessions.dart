@@ -104,12 +104,12 @@ class _ViewSessionsState extends State<ViewSessions> {
                             },
                             icon: const Icon(Icons.delete),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              // You can implement the edit functionality here
-                            },
-                            icon: const Icon(Icons.edit),
-                          ),
+                          // IconButton(
+                          //   onPressed: () {
+                          //     // You can implement the edit functionality here
+                          //   },
+                          //   icon: const Icon(Icons.edit),
+                          // ),
                         ],
                       ),
                     ],

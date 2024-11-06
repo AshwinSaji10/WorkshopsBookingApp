@@ -79,8 +79,8 @@ class _ViewWorkshopsState extends State<ViewWorkshops> {
                           },
                           icon: const Icon(Icons.delete),
                         ),
-                        IconButton(
-                            onPressed: () {}, icon: const Icon(Icons.edit))
+                        // IconButton(
+                        //     onPressed: () {}, icon: const Icon(Icons.edit))
                       ],
                     )
 

@@ -80,8 +80,8 @@ class _ViewLocationsState extends State<ViewLocations> {
                           },
                           icon: const Icon(Icons.delete),
                         ),
-                        IconButton(
-                            onPressed: () {}, icon: const Icon(Icons.edit))
+                        // IconButton(
+                        //     onPressed: () {}, icon: const Icon(Icons.edit))
                       ],
                     )
 
