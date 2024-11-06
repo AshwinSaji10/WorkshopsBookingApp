@@ -39,11 +39,13 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: theme.colorScheme.secondary,
+        // color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all( 
-          color:theme.colorScheme.secondary,
-          width:1.0,
-        )
+        // border: Border.all( 
+        //   color:theme.colorScheme.secondary,
+        //   // color: Colors.white,
+        //   width:1.0,
+        // )
       ),
       child: TextFormField(
         // style: const TextStyle(color: Colors.black),
@@ -62,6 +64,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
             borderRadius: BorderRadius.circular(10), // Same value as Container
             borderSide: BorderSide(
               color: theme.colorScheme.tertiary,
+              // color: Colors.white,
               width: 1.0,
             ),
           ),
@@ -69,10 +72,11 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
             borderRadius: BorderRadius.circular(10), // Same value as Container
             borderSide: BorderSide(
               color: theme.colorScheme.tertiary,
+              // color: Colors.white,
               width: 1.0,
             ),
           ),
-          // hintStyle: const TextStyle(color: Colors.black45),
+          hintStyle: const TextStyle(color: Colors.black45),
           suffixIcon: GestureDetector(
             onTap: () {
               setState(() {
