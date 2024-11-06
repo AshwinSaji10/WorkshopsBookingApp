@@ -6,6 +6,7 @@ import 'package:workshops_booking/widgets/form_container_widget.dart';
 import 'package:intl/intl.dart';
 
 final formatter = DateFormat("yyyy-MM-dd");
+final timeFormatter = DateFormat("hh:mm a");
 
 class AddNewSession extends StatefulWidget {
   const AddNewSession({super.key});
@@ -16,14 +17,16 @@ class AddNewSession extends StatefulWidget {
 
 class _AddNewSessionState extends State<AddNewSession> {
   DateTime? _selectedDate;
+  TimeOfDay? _selectedStartTime;
+  TimeOfDay? _selectedEndTime;
 
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _workshopIdController = TextEditingController();
   final TextEditingController _locationIdController = TextEditingController();
   final TextEditingController _instructorIdController = TextEditingController();
   // final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _startTimeController = TextEditingController();
-  final TextEditingController _endTimeController = TextEditingController();
+  // final TextEditingController _startTimeController = TextEditingController();
+  // final TextEditingController _endTimeController = TextEditingController();
 
   final DatabaseService _dbService = DatabaseService.instance;
 
@@ -34,8 +37,8 @@ class _AddNewSessionState extends State<AddNewSession> {
     _locationIdController.dispose();
     _instructorIdController.dispose();
     // _dateController.dispose();
-    _startTimeController.dispose();
-    _endTimeController.dispose();
+    // _startTimeController.dispose();
+    // _endTimeController.dispose();
     super.dispose();
   }
 
@@ -54,6 +57,31 @@ class _AddNewSessionState extends State<AddNewSession> {
         },
       );
     }
+  }
+
+  Future<void> timePicker(String label) async {
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (pickedTime != null) {
+      setState(
+        () {
+          if (label == "Start") {
+            _selectedStartTime = pickedTime;
+          } else {
+            _selectedEndTime = pickedTime;
+          }
+        },
+      );
+    }
+  }
+
+  String formatTimeOfDay(TimeOfDay time) {
+    final now = DateTime.now();
+    final dateTime =
+        DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    return timeFormatter.format(dateTime); // Formats to "hh:mm a"
   }
 
   @override
@@ -112,28 +140,101 @@ class _AddNewSessionState extends State<AddNewSession> {
                     children: [
                       Container(
                         margin: const EdgeInsets.only(left: 10),
-                        child: Text(_selectedDate == null
-                            ? "Select Workshop date"
-                            : formatter.format(_selectedDate!)),
+                        child: Text(
+                          _selectedDate == null
+                              ? "Select Workshop date"
+                              : formatter.format(_selectedDate!),
+                        ),
                       ),
-                      const Icon(Icons.calendar_month),
+                      const Row(
+                        children: [
+                          Icon(Icons.calendar_month),
+                          SizedBox(
+                            width: 10,
+                          )
+                        ],
+                      )
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-              FormContainerWidget(
-                hintText: "Start Time",
-                controller: _startTimeController,
-                isPasswordField: false,
-                inputType: TextInputType.datetime,
+              // FormContainerWidget(
+              //   hintText: "Start Time",
+              //   controller: _startTimeController,
+              //   isPasswordField: false,
+              //   inputType: TextInputType.datetime,
+              // ),
+              GestureDetector(
+                onTap: () => timePicker("Start"),
+                child: Container(
+                  height: 60,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black26),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: Text(
+                          _selectedStartTime == null
+                              ? "Select Start Time"
+                              : _selectedStartTime!.format(context),
+                        ),
+                      ),
+                      const Row(
+                        children: [
+                          Icon(Icons.access_time),
+                          SizedBox(
+                            width: 10,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
-              FormContainerWidget(
-                hintText: "End Time",
-                controller: _endTimeController,
-                isPasswordField: false,
-                inputType: TextInputType.datetime,
+              // FormContainerWidget(
+              //   hintText: "End Time",
+              //   controller: _endTimeController,
+              //   isPasswordField: false,
+              //   inputType: TextInputType.datetime,
+              // ),
+              GestureDetector(
+                onTap: () => timePicker("End"),
+                child: Container(
+                  height: 60,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black26),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: Text(
+                          _selectedEndTime == null
+                              ? "Select End Time"
+                              : _selectedEndTime!.format(context),
+                        ),
+                      ),
+                      const Row(
+                        children: [
+                          Icon(Icons.access_time),
+                          SizedBox(
+                            width: 10,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -143,8 +244,8 @@ class _AddNewSessionState extends State<AddNewSession> {
                       _locationIdController.text.isEmpty ||
                       _instructorIdController.text.isEmpty ||
                       _selectedDate == null ||
-                      _startTimeController.text.isEmpty ||
-                      _endTimeController.text.isEmpty) {
+                      _selectedStartTime == null ||
+                      _selectedEndTime == null) {
                     Fluttertoast.showToast(
                       msg: "Empty fields",
                       toastLength: Toast.LENGTH_SHORT,
@@ -161,8 +262,8 @@ class _AddNewSessionState extends State<AddNewSession> {
                         _locationIdController.text,
                         _instructorIdController.text,
                         formatter.format(_selectedDate!),
-                        _startTimeController.text,
-                        _endTimeController.text,
+                        formatTimeOfDay(_selectedStartTime!),
+                        formatTimeOfDay(_selectedEndTime!),
                       );
 
                       Fluttertoast.showToast(
@@ -181,13 +282,14 @@ class _AddNewSessionState extends State<AddNewSession> {
                           _locationIdController.clear();
                           _instructorIdController.clear();
                           _selectedDate = null;
-                          _startTimeController.clear();
-                          _endTimeController.clear();
+                          _selectedStartTime = null;
+                          _selectedEndTime = null;
                         },
                       );
                     } catch (e) {
                       Fluttertoast.showToast(
-                        msg: "Database error: ${e.toString()}",
+                        msg:
+                            "Database error: ${e.toString()}",
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.CENTER,
                         backgroundColor: Colors.red,
