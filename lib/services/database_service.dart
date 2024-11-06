@@ -238,7 +238,7 @@ class DatabaseService {
         throw Exception(
             'Primary key violation: Session ID $sid already exists.');
       } else {
-        throw Exception('Database error: $e');
+        throw Exception(e);
       }
     }
   }
