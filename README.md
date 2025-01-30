@@ -10,6 +10,12 @@ The technology used for building this application include
 </ul>
 
 ## Database design
+The database consists of six tables
+<ol>
+  <li>Workshops(workshop_id, workshop_name, workshop_subject)
+![image](https://github.com/user-attachments/assets/50f89eb0-dfd2-499b-bc7f-190c2a5c3c36)
+</li>
+</ol>
 
 
 
