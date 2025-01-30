@@ -20,7 +20,7 @@ The database consists of six tables
   <li>Bookings(booking_id, u_id, s_id) [2 foreign keys]</li>
 </ol>
 
-
+<img src="https://github.com/user-attachments/assets/0fbcf3ba-b1a4-44b1-af78-94e4ee0430cf" width=400>
 
 
 ## Showcase
