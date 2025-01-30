@@ -12,9 +12,12 @@ The technology used for building this application include
 ## Database design
 The database consists of six tables
 <ol>
-  <li>Workshops(workshop_id, workshop_name, workshop_subject)
-![image](https://github.com/user-attachments/assets/50f89eb0-dfd2-499b-bc7f-190c2a5c3c36)
-</li>
+  <li>Workshops(workshop_id, workshop_name, workshop_subject)</li>
+  <li>Instructors(instructor_id, instructor_name, age, gender)</li>
+  <li>Locations(location_id, location_name, capacity)</li>
+  <li>Sessions(session_id, w_id, i_id, l_id, date, start, end) [3 foreign keys]</li>
+  <li>Users(u_id, u_name, password)</li>
+  <li>Bookings(booking_id, u_id, s_id) [2 foreign keys]</li>
 </ol>
 
 
